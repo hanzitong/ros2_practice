@@ -21,12 +21,20 @@ void add(const std::shared_ptr<example_interfaces::srv::AddTwoInts::Request> req
 
 
 int main(int argc, char* argv[]) {
+    /*  5 staps for writing node
+    1. rclcpp::init()
+    2. make node smart-pointer with rclcpp::Node::make_shared()
+    3. create topic/service/action with functions inside the node
+    4. rclcpp::spin()
+    5. rclcpp::shutdown()
+    */
+
     rclcpp::init(argc, argv);
 
     /* node declaration */
     std::shared_ptr<rclcpp::Node> node_ptr = rclcpp::Node::make_shared("add_two_ints_server");
     /* node declaration without syntax sugar (in this case, std::forward() is unnecessary) */
-    // std::shared_ptr<rclcpp::Node> node_ptr = std::make_shared<rclcpp::Node>("add_two_ints_server");
+    std::shared_ptr<rclcpp::Node> node_ptr2 = std::make_shared<rclcpp::Node>("add_two_ints_server");
         // This sentence makes a smart-pointer named "node_ptr" pointing an instance of rclcpp::Node.
         // rclcpp is a namespace where Node class is defined.
         // As a result, rclcpp::Node::make_shared() is a static class function of rclcpp::Node.
@@ -56,12 +64,13 @@ int main(int argc, char* argv[]) {
     /* service declaration via rclcpp::Node::create_service<>()*/
     rclcpp::Service<example_interfaces::srv::AddTwoInts>::SharedPtr service_ptr = 
         node_ptr -> create_service<example_interfaces::srv::AddTwoInts>("add_two_ints", &add);
-    // the part of "Service<example_interfaces::srv::AddTwoInts>::SharedPtr" is template class.
-    // the part of "example_interfaces::srv::AddTwoInts" is struct which is defined as ros2 srv.
-    // in concise expression, Service<T>::SharedPtr is a ros-specific smart-pointer.
-    // rclcpp::Service<ServiceT> is a class template.
-    // rclcpp::Service<T>()::SharedPtr is a kind of alias grammar of C++11 (keyword: "typedef" "using").
-    // so rclcpp::Service<T>::SharedPtr stands for std::shared_ptr<rclcpp::Service<T>>.
+        // rclcpp::Service<T>::SharedPtr stands for std::shared_ptr<rclcpp::Service<T>>. it's a "syntax sugar" of ros.
+        // rclcpp::Service<ServiceT> is a class template. it's instance is usually made by rclcpp::create_service().
+        // rclcpp::Node has wrapper of rclcpp::create_service() so we can call it from rclcpp::Node instance.
+        // As a result, Node instance makes Service instance.
+        // サービスはノードの一機能のように見えて裏では独立している．
+        // ノードで保有するスマートポインタを使ってサービスが操作できる事で一機能のように見える．
+        // The node-name which created servce is used as a namespace of the created service.
 
 
     RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "ready to add two ints.");
@@ -71,14 +80,8 @@ int main(int argc, char* argv[]) {
     rclcpp::shutdown();
 
     return 0;
+
+
 }
-
-
-    // rclcpp::PublisherOptionsWithAllocator<std::allocator<void>> pub_options;
-    // // ここでpub_optionsをカスタマイズすることができます
-
-    // publisher_ = this->create_publisher<std_msgs::msg::String>("topic", 10, pub_options);
-
-    // auto timer_callback =
 
 
