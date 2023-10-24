@@ -20,6 +20,12 @@ ament_target_dependencies(node_server
   example_interfaces
 )
 
+add_executable(node_client src/client.cpp)
+ament_target_dependencies(node_client
+  rclcpp
+  example_interfaces
+)
+
 # add_executable(node_client src/service_client.cpp)
 # ament_target_dependencies(client
 #   rclcpp
@@ -29,6 +35,7 @@ ament_target_dependencies(node_server
 
 install(TARGETS
   node_server
+  node_client
   # node_client
   DESTINATION lib/${PROJECT_NAME}
 )
