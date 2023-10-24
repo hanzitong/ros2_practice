@@ -34,7 +34,7 @@ int main(int argc, char* argv[]) {
     /* node declaration */
     std::shared_ptr<rclcpp::Node> node_ptr = rclcpp::Node::make_shared("add_two_ints_server");
     /* node declaration without syntax sugar (in this case, std::forward() is unnecessary) */
-    std::shared_ptr<rclcpp::Node> node_ptr2 = std::make_shared<rclcpp::Node>("add_two_ints_server");
+    // std::shared_ptr<rclcpp::Node> node_ptr2 = std::make_shared<rclcpp::Node>("add_two_ints_server_2");
         // This sentence makes a smart-pointer named "node_ptr" pointing an instance of rclcpp::Node.
         // rclcpp is a namespace where Node class is defined.
         // As a result, rclcpp::Node::make_shared() is a static class function of rclcpp::Node.
